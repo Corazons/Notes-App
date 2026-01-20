@@ -3,15 +3,19 @@ import mongoose from "mongoose";
 await mongoose.connect(process.env.MONGODB_URI)
 
 const noteSchema = mongoose.Schema({
-    email: {
-        type: String,
-        require: true
+    title: String,
+    content: String,
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", 
+        required: true
     },
-    password: {
-        type: String,
-        require: true
-    },
-    createdAt: Date
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 })
 
-const note = mongoose.model("note", noteSchema)
+export default mongoose.model("Note", noteSchema)

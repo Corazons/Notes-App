@@ -11,7 +11,10 @@ const userSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    createdAt: Date
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 })
 
-const user = mongoose.model("user", userSchema)
+export default mongoose.model("User", userSchema)
