@@ -13,34 +13,21 @@ const router = express.Router()
 
 router.get('/',(req, res) => {
     res.send("<h1>HELLO WORLD</h1>")
-    console.log('=== check collection ===')
 })
 
-//read note by user id
-router.get('/api/notes/:userId', (req, res) => {
-    res.send(req.params)
-})
-
-//create note
-router.post('/api/notes', (req, res) => {
-    const body = req.body
-    console.log(body)
-    res.status(201).json(body)
-})
-
-router.post('/register', register)
-router.post('/login', login)
-router.post('/refresh', refresh)
-router.post('/notes', createNote)
-router.get('/notes', getAllNotes)
-router.get('/profile', authMiddleware, (req, res) => {
+router.post('/api/register', register)
+router.post('/api/login', login)
+router.post('/api/refresh', refresh)
+router.post('/api/notes', createNote)
+router.get('/api/notes', getAllNotes)
+router.get('/api/profile', authMiddleware, (req, res) => {
   res.json({
     message: "Profile berhasil diakses",
     user: req.user
   })
 })
 
-router.post("/logout", (req, res) => {
+router.post("/api/logout", (req, res) => {
   res.clearCookie("refreshToken")
   res.sendStatus(204)
 })

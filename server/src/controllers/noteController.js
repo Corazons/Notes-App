@@ -2,7 +2,6 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import User from "../models/userModel.js"
 import Note from "../models/noteModel.js"
-import authMiddleware from "../middlewares/authMiddleware.js"
 import {
     generateAccessToken, 
     generateRefreshToken
@@ -97,7 +96,7 @@ const createNote = async(req, res) => {
     const note = await Note.create({
         title,
         content,
-        userId: req.user.id   // 🔥 INI KUNCINYA
+        userId: req.user.id  
     });
 
     res.status(201).json(note);
