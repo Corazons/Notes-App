@@ -84,23 +84,27 @@ const refresh = (req, res) => {
     }
 }
 
-const createNote = async(req, res) => {
+const createNote = async (req, res) => {
+  try {
     const { title, content } = req.body;
 
     if (!title || !content) {
-        return res.status(400).json({
-        message: "title dan content wajib diisi"
-        });
+      return res.status(400).json({ message: "Title & content required" });
     }
 
     const note = await Note.create({
-        title,
-        content,
-        userId: req.user.id  
+      title,
+      content,
+      userId: req.user.id,
+      createdAt: new Date()
     });
 
     res.status(201).json(note);
-}
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to create note" });
+  }
+};
 
 const getAllNotes = async (req, res) => {
     const notes = await Note.find({

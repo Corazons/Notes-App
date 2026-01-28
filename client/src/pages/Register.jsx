@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {Input} from "../components/Input"
+import { Input } from "../components/Input"
+import { Link } from "react-router";
 
 export function Register() {
   const [email, setEmail] = useState("");
@@ -41,7 +42,7 @@ export function Register() {
         </button>
 
         <p className="mt-4 text-center text-sm text-gray-500">
-          Already have an account? <a href="/login" className="font-medium text-indigo-600">Login</a>
+          Already have an account? <Link to="/login" className="font-medium text-indigo-600">Login</Link>
         </p>
       </div>
     </div>

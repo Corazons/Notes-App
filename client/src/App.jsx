@@ -3,6 +3,7 @@ import { Login } from "./pages/login"
 import { Register } from "./pages/register"
 import NotesDashboard from "./pages/Notes";
 import LandingPage from "./pages/LandingPage";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/Notes" element={<NotesDashboard />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/notes" element={<NotesDashboard />} />
+      </Route>
     </Routes>
   )
 }

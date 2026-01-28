@@ -1,30 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import CreateNoteModal from "../components/CreateNoteModal";
 import { LogOut, Plus, NotebookPen } from "lucide-react";
+import { logout } from "../services/authService";
+import { getAllNotes } from "../services/noteService";
 
 export default function NotesDashboard() {
   const [showMenu, setShowMenu] = useState(false);
+  const [notes, setNotes] = useState([]);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    async function fetchData(){
+      try{
+        const getNotes = await getAllNotes();
+        console.log("API NOTES:", getNotes);
+        setNotes(getNotes);
+      }catch(e){
+        console.error(e);
+      }
+    }
 
-  // dummy data (nanti ganti dari API)
-  const notes = [
-    {
-      id: 1,
-      title: "JWT Refresh Token Flow",
-      content: "Catatan tentang access token dan refresh token...",
-      createdAt: "2026-01-21",
-    },
-    {
-      id: 2,
-      title: "Secure Notes App Idea",
-      content: "Landing page, auth, dan protected routes...",
-      createdAt: "2026-01-19",
-    },
-    {
-      id: 3,
-      title: "React Router Notes",
-      content: "Masalah refresh dan solusi index.html",
-      createdAt: "2026-01-17",
-    },
-  ];
+    fetchData()
+  }, []);
+
+
+  function handleAddNote(note) {
+    setNotes((prev) => [note, ...prev]);
+    console.log("ini notes: "+ notes);
+  }
+
+  const logOut = () =>{
+    logout()
+    navigate("/login")
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -32,7 +42,7 @@ export default function NotesDashboard() {
       <header className="flex items-center justify-between px-6 py-4 border-b bg-white">
         <div className="flex items-center gap-2 font-semibold text-lg">
           <NotebookPen className="h-6 w-6 text-indigo-600" />
-          SecureNote
+          Note App
         </div>
 
         {/* Profile */}
@@ -48,7 +58,7 @@ export default function NotesDashboard() {
             <div className="absolute right-0 mt-2 w-40 rounded-xl bg-white shadow-md border">
               <button
                 className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                onClick={() => alert("Logout logic here")}
+                onClick={() => logOut()}
               >
                 <LogOut className="h-4 w-4" /> Logout
               </button>
@@ -61,8 +71,10 @@ export default function NotesDashboard() {
       <main className="max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold">Your Notes</h1>
-          <button className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
-            <Plus className="h-4 w-4" /> New Note
+          <button 
+            onClick={() => setOpen(true)} 
+            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+              <Plus className="h-4 w-4" /> New Note
           </button>
         </div>
 
@@ -72,7 +84,7 @@ export default function NotesDashboard() {
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((note) => (
               <div
-                key={note.id}
+                key={note._id}
                 className="rounded-2xl bg-white p-5 shadow-sm hover:shadow transition"
               >
                 <div className="flex justify-between items-start">
@@ -88,6 +100,11 @@ export default function NotesDashboard() {
             ))}
         </div>
       </main>
+      <CreateNoteModal
+          open={open}
+          onClose={() => setOpen(false)}
+          onCreated={handleAddNote}
+      />
     </div>
   );
 }

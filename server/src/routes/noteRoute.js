@@ -18,8 +18,8 @@ router.get('/',(req, res) => {
 router.post('/api/register', register)
 router.post('/api/login', login)
 router.post('/api/refresh', refresh)
-router.post('/api/notes', createNote)
-router.get('/api/notes', getAllNotes)
+router.post('/api/notes',authMiddleware, createNote)
+router.get('/api/notes', authMiddleware, getAllNotes)
 router.get('/api/profile', authMiddleware, (req, res) => {
   res.json({
     message: "Profile berhasil diakses",
@@ -28,7 +28,11 @@ router.get('/api/profile', authMiddleware, (req, res) => {
 })
 
 router.post("/api/logout", (req, res) => {
-  res.clearCookie("refreshToken")
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false // true kalau HTTPS
+  })
   res.sendStatus(204)
 })
 

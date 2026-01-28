@@ -1,22 +1,30 @@
-GET http://localhost:3000/users/19/books/22
+GET http://localhost:3000/api/notes
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3Njk1OTc4MDEsImV4cCI6MTc2OTU5ODQwMX0.LdC2wwytZ7vFm5FFLmJm8eKGqpYJoAiQRr9HTVpEEQs
+
+###
+
+POST http://localhost:3000/api/login
 Content-Type: application/json
 
 {
-    "content": "auwwww"
+  "email": "cihuyyy22@gmail.com",
+  "password": "abogoboga"
 }
-###
 
-POST http://localhost:3000/login
+###
+POST http://localhost:3000/api/refresh
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWF0IjoxNzY4ODIwOTc2LCJleHAiOjE3Njg4MjQ1NzZ9.iA2AN482qcn80RSviNCABlsWGhVXtZSjB5VbfgfCvJM
+
+###
+POST http://localhost:3000/api/notes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3Njk1MTI1MDcsImV4cCI6MTc2OTUxMzEwN30.WQoSBHZwx-_PpPY7mwQ5QIfJf3vmhDm6j1HtY4sdq6k
 Content-Type: application/json
 
 {
-  "email": "user@gmail.com",
-  "password": "123456"
+  "title": "cihuyyy22@gmail.com",
+  "content": "abogoboga"
 }
 
 ###
-GET http://localhost:3000/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWF0IjoxNzY4ODIwOTc2LCJleHAiOjE3Njg4MjQ1NzZ9.iA2AN482qcn80RSviNCABlsWGhVXtZSjB5VbfgfCvJM
-
-###
-POST http://localhost:3000/logout
+GET http://localhost:3000/api/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3Njk1MTIwMDIsImV4cCI6MTc2OTUxMjYwMn0.2JRogb9TYfiwoR3quAB-GB-Ke8_4KEkDiIx3olSwJlw
