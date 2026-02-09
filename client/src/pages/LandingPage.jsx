@@ -8,7 +8,7 @@ export default function LandingPage() {
       <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 font-semibold text-lg">
           <NotebookPen className="h-6 w-6 text-indigo-600" />
-          SecureNote
+          NoteAPP
         </div>
         <div className="flex gap-3">
           <Link

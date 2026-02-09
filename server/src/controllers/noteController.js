@@ -89,7 +89,7 @@ const createNote = async (req, res) => {
     const { title, content } = req.body;
 
     if (!title || !content) {
-      return res.status(400).json({ message: "Title & content required" });
+      return statusMessage(400, "Title & content harus ditambahkan");
     }
 
     const note = await Note.create({
@@ -102,7 +102,7 @@ const createNote = async (req, res) => {
     res.status(201).json(note);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to create note" });
+    statusMessage(500, "Gagal membuat note");
   }
 };
 
@@ -114,4 +114,26 @@ const getAllNotes = async (req, res) => {
     res.json(notes);
 }
 
-export {register, login, refresh, createNote, getAllNotes}
+const updateNote = async (req, res) =>{
+    try{
+        const body = req.body;
+        if(!body) return statusMessage(400, "Title & content harus ditambahkan");
+        
+        const noteId = req.params.id;
+        if(!body) return statusMessage(400, "TIdak ada noteId");
+            
+        const note = await Note.findByIdAndUpdate(noteId, body);
+        
+        res.json(note);
+        statusMessage(200, "Note berhasil diubah");
+    }catch(err){
+        statusMessage(500, "Gagal mengubah note");
+    }
+}
+
+const deleteNote = async (req, res) =>{
+    const note = await Note.findByIdAndDelete(req.params.id)
+    res.json(note);
+}
+
+export {register, login, refresh, createNote, getAllNotes, updateNote, deleteNote}

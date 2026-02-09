@@ -2,17 +2,20 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { login } from "../services/authService";
 import { Input } from "../components/Input";
+import { useAuth } from "../context/AuthContext";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const {setAccessToken} = useAuth();
+  
   async function handleLogin(e) {
     e.preventDefault();
 
     try {
-      await login({ email, password });
+      const res = await login({ email, password });
+      setAccessToken(res.accessToken);
       navigate("/notes");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
