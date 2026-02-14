@@ -1,35 +1,62 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import CreateNoteModal from "../components/CreateNoteModal";
-import { LogOut, Plus, NotebookPen } from "lucide-react";
+import EditNoteModal from "../components/EditNoteModal";
+import { LogOut, Plus, NotebookPen, Trash2, Edit } from "lucide-react";
 import { logout } from "../services/authService";
-import { getAllNotes } from "../services/noteService";
+import { useAuth } from "../context/AuthContext";
+
+import { getAllNotes, deleteNote} from "../services/noteService";
 
 export default function NotesDashboard() {
   const [showMenu, setShowMenu] = useState(false);
   const [notes, setNotes] = useState([]);
+  const [editingNote, setEditingNote] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  
+
+  const { user, loading } = useAuth();
+  const username = user;
+  const firstWordInUsername = username ? username.substring(0,1) : "";
+
   useEffect(() => {
+    if (loading) return; 
+
     async function fetchData(){
       try{
         const getNotes = await getAllNotes();
-        console.log("API NOTES:", getNotes);
         setNotes(getNotes);
       }catch(e){
         console.error(e);
       }
     }
 
-    fetchData()
-  }, []);
+  fetchData()
+  }, [loading]);
 
 
-  function handleAddNote(note) {
+  const handleAddNote = (note) => {
     setNotes((prev) => [note, ...prev]);
     console.log("ini notes: "+ notes);
-  }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteNote(id);
+      setNotes(prev => prev.filter(note => note._id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdate = (updatedNote) => {
+    setNotes(prev =>
+      prev.map(note =>
+        note._id === updatedNote._id ? updatedNote : note
+      )
+    );
+  };
 
   const logOut = () =>{
     logout()
@@ -47,11 +74,12 @@ export default function NotesDashboard() {
 
         {/* Profile */}
         <div className="relative">
+          {username}
           <button
             onClick={() => setShowMenu(!showMenu)}
             className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold"
           >
-            U
+            {firstWordInUsername}
           </button>
 
           {showMenu && (
@@ -93,9 +121,31 @@ export default function NotesDashboard() {
                     {new Date(note.createdAt).toLocaleDateString()}
                   </span>
                 </div>
+
                 <p className="mt-2 text-sm text-gray-600 line-clamp-2">
                   {note.content}
                 </p>
+
+                {/* Buttons */}
+                <div className="flex gap-3 mt-4">
+                  {/* Edit Button */}
+                  <button
+                   onClick={() => {
+                      setEditingNote(note);
+                      setEditOpen(true);
+                    }}
+                    className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+                  >
+                    Edit<Edit />
+                  </button>
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => handleDelete(note._id)}
+                    className="flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                  >
+                    Delete<Trash2 />
+                  </button>
+                </div>
               </div>
             ))}
         </div>
@@ -105,6 +155,18 @@ export default function NotesDashboard() {
           onClose={() => setOpen(false)}
           onCreated={handleAddNote}
       />
+      {editingNote && (
+        <EditNoteModal
+          note={editingNote}
+          open={editOpen}
+          onClose={() => {
+            setEditOpen(false);
+            setTimeout(() => setEditingNote(null), 300); 
+            // delay supaya animasi close selesai dulu
+          }}
+          onUpdate={handleUpdate}
+        />
+      )}
     </div>
   );
 }

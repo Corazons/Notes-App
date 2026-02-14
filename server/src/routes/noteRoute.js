@@ -5,6 +5,7 @@ import {
   register,
   login,
   refresh,
+  getMe,
   createNote,
   getAllNotes,
   updateNote,
@@ -17,22 +18,17 @@ router.get('/',(req, res) => {
     res.send("<h1>HELLO WORLD</h1>")
 })
 
+//user
 router.post('/api/register', register)
 router.post('/api/login', login)
 router.post('/api/refresh', refresh)
+router.get('/api/me', authMiddleware, getMe)
 
 //notes
 router.post('/api/notes',authMiddleware, createNote)
 router.get('/api/notes', authMiddleware, getAllNotes)
 router.put('/api/notes/:id', authMiddleware, updateNote)
 router.delete('/api/notes/:id', authMiddleware, deleteNote)
-
-router.get('/api/profile', authMiddleware, (req, res) => {
-  res.json({
-    message: "Profile berhasil diakses",
-    user: req.user
-  })
-})
 
 router.post("/api/logout", (req, res) => {
   res.clearCookie("refreshToken", {

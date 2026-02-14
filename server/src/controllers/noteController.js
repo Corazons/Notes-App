@@ -7,16 +7,16 @@ import {
     generateRefreshToken
 } from "../utils/generateToken.js"
 
-const statusMessage = (status, message) => {
+const statusMessage = (res, status, message) => {
     res.status(status).json({message})
 }
 
 const register = async(req, res) => {
     const body = req.body
-    if (!body) return statusMessage(400, "Tidak ada request!!!")
+    if (!body) return res.status(400).json("Tidak ada request!!!")
 
     const {email, password} = body
-    if (!email || !password) return statusMessage(400, "Email dan Password harus diisi!!")
+    if (!email || !password) return res.status(400).json("Email dan Password harus diisi!!")
 
     const passwordHash = await bcrypt.hash(password, 12);
 
@@ -32,13 +32,13 @@ const register = async(req, res) => {
 const login = async(req, res, next) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) return statusMessage(400, "Email dan password wajib diisi")
+        if (!email || !password) return res.status(400).json("Email dan Password harus diisi!!")
         
         const user = await User.findOne({ email });
-        if (!user) return statusMessage(401, "Email atau password salah")
+        if (!user) return res.status(401).json("Email atau password salah")
 
         const isValid = await bcrypt.compare(password, user.password);
-        if (!isValid) return statusMessage(401, "Email atau password salah")
+        if (!isValid) return res.status(401).json("Email atau password salah")
 
         const accessToken = generateAccessToken({
             userId: user._id,
@@ -46,7 +46,7 @@ const login = async(req, res, next) => {
         });
 
         const refreshToken = generateRefreshToken({
-            userId: user._id
+            userId: user._id,
         });
 
         res.cookie("refreshToken", refreshToken, {
@@ -74,8 +74,8 @@ const refresh = (req, res) => {
         )
     
         const newAccessToken = generateAccessToken({
-        id: decoded.userId
-        })
+            Id: decoded.userId
+        });
 
         res.json({ accessToken: newAccessToken })
 
@@ -84,12 +84,23 @@ const refresh = (req, res) => {
     }
 }
 
+const getMe = async(req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user) return res.status(403).json("User tidak ditemukan")
+        
+        res.json(user);
+    } catch {
+        res.status(500).json("Gagal ambil user")
+    }
+}
+
 const createNote = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content } = req.body
 
     if (!title || !content) {
-      return statusMessage(400, "Title & content harus ditambahkan");
+      return res.status(400).json("Title & content harus ditambahkan")
     }
 
     const note = await Note.create({
@@ -102,7 +113,7 @@ const createNote = async (req, res) => {
     res.status(201).json(note);
   } catch (err) {
     console.error(err);
-    statusMessage(500, "Gagal membuat note");
+    res.status(500).json("Gagal membuat note")
   }
 };
 
@@ -117,17 +128,17 @@ const getAllNotes = async (req, res) => {
 const updateNote = async (req, res) =>{
     try{
         const body = req.body;
-        if(!body) return statusMessage(400, "Title & content harus ditambahkan");
+        if(!body) return res.status(400).json("Title & content harus ditambahkan")
         
         const noteId = req.params.id;
-        if(!body) return statusMessage(400, "TIdak ada noteId");
+        if(!body) return res.status(400).json("TIdak ada noteId")
             
-        const note = await Note.findByIdAndUpdate(noteId, body);
+        const note = await Note.findByIdAndUpdate(noteId, body, { new: true });
         
         res.json(note);
-        statusMessage(200, "Note berhasil diubah");
+        res.status(200).json("Note berhasil diubah")
     }catch(err){
-        statusMessage(500, "Gagal mengubah note");
+        res.status(500).json("Gagal mengubah note")
     }
 }
 
@@ -136,4 +147,4 @@ const deleteNote = async (req, res) =>{
     res.json(note);
 }
 
-export {register, login, refresh, createNote, getAllNotes, updateNote, deleteNote}
+export {register, login, refresh, getMe, createNote, getAllNotes, updateNote, deleteNote}

@@ -36,6 +36,10 @@ export async function refresh(){
   return response.data.accessToken;
 }
 
+export async function getUser(){
+  const response = await api.get("/api/me");
+  return response.data
+}
 /**
  * LOGOUT
  * hapus token di client

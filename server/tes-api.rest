@@ -1,11 +1,20 @@
 GET http://localhost:3000/api/notes
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3NzA2MzM1NjksImV4cCI6MTc3MDYzNDE2OX0.g8oGT988VraATvm2T7PUeiqS2MLiu1RzqdqLr0dt6V4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3NzA2MzU0ODgsImV4cCI6MTc3MDYzNjA4OH0.80vSuhQE7Y8J2XaCc8YQHFbL_mcj9eFCNat-X8g62-0
 
 ###
 DELETE http://localhost:3000/api/notes/6979e9dfee407c4dbe23e593
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3NzA2MzM1NjksImV4cCI6MTc3MDYzNDE2OX0.g8oGT988VraATvm2T7PUeiqS2MLiu1RzqdqLr0dt6V4
 
-##
+###
+PUT http://localhost:3000/api/notes/6979ea04ee407c4dbe23e595
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3NzA2MzU0ODgsImV4cCI6MTc3MDYzNjA4OH0.80vSuhQE7Y8J2XaCc8YQHFbL_mcj9eFCNat-X8g62-0
+Content-Type: application/json
+
+{
+  "title": "dadar gulung",
+  "content": "tes"
+}
+###
 POST http://localhost:3000/api/login
 Content-Type: application/json
 
@@ -14,6 +23,10 @@ Content-Type: application/json
   "password": "abogoboga"
 }
 
+
+###
+GET http://localhost:3000/api/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcwYWM2ZTcyOTQ1YWYzNzYyM2ZmYTEiLCJlbWFpbCI6ImNpaHV5eXkyMkBnbWFpbC5jb20iLCJpYXQiOjE3NzA5ODAxNjEsImV4cCI6MTc3MDk4MDc2MX0.qMiInFT4nIYFEzcBOgtl2ZgUWVov-dTQzCB9s-4-VLo
 # {
 #   "email": "yahya123@gmail.com",
 #   "password": "agaragar77"
