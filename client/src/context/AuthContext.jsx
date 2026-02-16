@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { refresh as refreshApi, getUser} from "../services/authService";
-import { getUsername } from "../util/getUsername";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -12,13 +11,11 @@ export function AuthProvider({ children }) {
     async function initAuth() {
       try {
         const accessToken = await refreshApi();
-        localStorage.setItem("accessToken", accessToken);
-        console.log("accessToken : ", accessToken);
         setAccessToken(accessToken);
+        localStorage.setItem("accessToken", accessToken);
 
         const res = await getUser();
-        console.log("User : ", res);
-        const username = getUsername(res);
+        const username = res.email.split("@")[0];;
         setUser(username);
       } catch {
         setAccessToken(null);

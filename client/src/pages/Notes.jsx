@@ -16,9 +16,8 @@ export default function NotesDashboard() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { user, loading } = useAuth();
-  const username = user;
-  const firstWordInUsername = username ? username.substring(0,1) : "";
+  const { user: username, loading } = useAuth();
+  const firstWordInUsername = username?.[0]?.toUpperCase() ?? "";;
 
   useEffect(() => {
     if (loading) return; 
@@ -74,7 +73,6 @@ export default function NotesDashboard() {
 
         {/* Profile */}
         <div className="relative">
-          {username}
           <button
             onClick={() => setShowMenu(!showMenu)}
             className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold"
@@ -83,14 +81,21 @@ export default function NotesDashboard() {
           </button>
 
           {showMenu && (
-            <div className="absolute right-0 mt-2 w-40 rounded-xl bg-white shadow-md border">
+            <div className="absolute right-0 mt-2 w-44 rounded-xl bg-white shadow-md border overflow-hidden">
+    
+              {/* Username */}
+              <div className="px-4 py-3 text-sm font-medium text-gray-800 border-b">
+                {username}
+              </div>
+
+              {/* Logout */}
               <button
-                className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                onClick={() => logOut()}
+                className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100"
+                onClick={logOut}
               >
                 <LogOut className="h-4 w-4" /> Logout
               </button>
-            </div>
+    </div>
           )}
         </div>
       </header>

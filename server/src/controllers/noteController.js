@@ -13,12 +13,12 @@ const statusMessage = (res, status, message) => {
 
 const register = async(req, res) => {
     const body = req.body
-    if (!body) return res.status(400).json("Tidak ada request!!!")
+    if (!body) return res.status(400).json({ message: "Tidak ada request!!!"})
 
     const {email, password} = body
-    if (!email || !password) return res.status(400).json("Email dan Password harus diisi!!")
+    if (!email || !password) return res.status(400).json({ message: "Email dan Password harus diisi!!"})
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcrypt.hash(password, 12)
 
     const user = new User({
       email: email,
@@ -32,13 +32,13 @@ const register = async(req, res) => {
 const login = async(req, res, next) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) return res.status(400).json("Email dan Password harus diisi!!")
+        if (!email || !password) return res.status(400).json({messsage: "Email dan Password harus diisi!!"})
         
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json("Email atau password salah")
+        if (!user) return res.status(401).json({message: "Email atau password salah"})
 
         const isValid = await bcrypt.compare(password, user.password);
-        if (!isValid) return res.status(401).json("Email atau password salah")
+        if (!isValid) return res.status(401).json({message: "Email atau password salah"})
 
         const accessToken = generateAccessToken({
             userId: user._id,
@@ -74,7 +74,8 @@ const refresh = (req, res) => {
         )
     
         const newAccessToken = generateAccessToken({
-            Id: decoded.userId
+            userId: decoded.userId,
+            email: decoded.email
         });
 
         res.json({ accessToken: newAccessToken })
@@ -87,7 +88,7 @@ const refresh = (req, res) => {
 const getMe = async(req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");
-        if (!user) return res.status(403).json("User tidak ditemukan")
+        if (!user) return res.status(403).json({message: "User tidak ditemukan"})
         
         res.json(user);
     } catch {
@@ -100,7 +101,7 @@ const createNote = async (req, res) => {
     const { title, content } = req.body
 
     if (!title || !content) {
-      return res.status(400).json("Title & content harus ditambahkan")
+      return res.status(400).json({message: "Title & content harus ditambahkan"})
     }
 
     const note = await Note.create({
@@ -113,7 +114,7 @@ const createNote = async (req, res) => {
     res.status(201).json(note);
   } catch (err) {
     console.error(err);
-    res.status(500).json("Gagal membuat note")
+    res.status(500).json({message: "Gagal membuat note"})
   }
 };
 
@@ -128,17 +129,17 @@ const getAllNotes = async (req, res) => {
 const updateNote = async (req, res) =>{
     try{
         const body = req.body;
-        if(!body) return res.status(400).json("Title & content harus ditambahkan")
+        if(!body) return res.status(400).json({message: "Title & content harus ditambahkan"})
         
         const noteId = req.params.id;
-        if(!body) return res.status(400).json("TIdak ada noteId")
+        if(!body) return res.status(400).json({message: "TIdak ada noteId"})
             
         const note = await Note.findByIdAndUpdate(noteId, body, { new: true });
         
         res.json(note);
-        res.status(200).json("Note berhasil diubah")
+        res.status(200).json({message: "Note berhasil diubah"})
     }catch(err){
-        res.status(500).json("Gagal mengubah note")
+        res.status(500).json({message: "Gagal mengubah note"})
     }
 }
 
